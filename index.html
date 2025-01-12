@@ -79,6 +79,13 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
+        #copyBtn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            background-color: #28a745;
+            color: white;
+        }
         .disclaimer {
             margin-top: 30px;
             font-size: 0.85em;
@@ -93,6 +100,7 @@
             <iframe src="https://www.instagram.com/reel/DEhf2uTJUs0/embed" allowfullscreen></iframe>
         </div>
         <div id="headline">Loading punchlines...</div>
+        <button id="copyBtn">Copy Link</button>
         <div class="buttons">
             <button id="prevBtn" disabled>Previous</button>
             <button id="nextBtn" disabled>Next</button>
@@ -103,8 +111,9 @@
     </div>
 
     <script>
-        // Array of 142 punchlines focused on Zuckerberg's controversies with fake dates between Sep 2024 and Jan 2025
         const punchlines = [
+            "September 3, 2024: Zuckerberg orchestrates a massive data breach to manipulate election outcomes. Public outcry intensifies. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "October 15, 2024: Zuckerberg secretly collaborates with spyware firms to monitor political activists. Privacy advocates are furious. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
             "September 3, 2024: Zuckerberg orchestrates a massive data breach to manipulate election outcomes. Public outcry intensifies. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
             "October 15, 2024: Zuckerberg secretly collaborates with spyware firms to monitor political activists. Privacy advocates are furious. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
             "November 22, 2024: Zuckerberg's team embeds hidden trackers in Meta devices, invading user privacy on an unprecedented scale. Users revolt. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
@@ -275,10 +284,11 @@
             "November 17, 2024: Zuckerberg's Meta is accused of exploiting user data to develop biased legal sentencing algorithms, undermining justice systems. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
             "December 10, 2024: Zuckerberg's Meta is found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
             "January 1, 2025: Zuckerberg uses Meta's data to develop biased transportation planning tools, favoring certain regions over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>"
-            // Add additional punchlines here following the same structure
+            // Ajouter les autres punchlines ici...
+            
+
         ];
 
-        // Shuffle the punchlines array
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -288,22 +298,19 @@
         }
 
         const shuffledPunchlines = shuffleArray([...punchlines]);
-
         let currentIndex = 0;
 
-        // DOM Elements
         const headlineDiv = document.getElementById('headline');
+        const copyBtn = document.getElementById('copyBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
 
-        // Display the current punchline
         function displayHeadline() {
             headlineDiv.innerHTML = shuffledPunchlines[currentIndex];
             prevBtn.disabled = currentIndex === 0;
             nextBtn.disabled = currentIndex === shuffledPunchlines.length - 1;
         }
 
-        // Event Listeners for navigation
         prevBtn.addEventListener('click', () => {
             if (currentIndex > 0) currentIndex--;
             displayHeadline();
@@ -314,12 +321,14 @@
             displayHeadline();
         });
 
-        // Initialize
-        window.onload = () => {
-            displayHeadline();
-            prevBtn.disabled = true;
-            nextBtn.disabled = shuffledPunchlines.length <= 1;
-        };
+        copyBtn.addEventListener('click', () => {
+            const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
+            navigator.clipboard.writeText(shareURL).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        });
+
+        window.onload = displayHeadline;
     </script>
 </body>
 </html>
