@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>True True News Viewer</title>
+    <title>Zuckerberg Controversy Viewer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            color: #000000;
+            background-color: #f4f4f9;
+            color: #333;
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             text-align: center;
+            height: 100vh;
         }
         .container {
             max-width: 800px;
@@ -24,14 +24,21 @@
         }
         h1 {
             margin-bottom: 20px;
+            font-size: 2em;
+            color: #444;
         }
         #headline {
-            font-size: 1.5em;
+            font-size: 1.25em;
             margin: 20px 0;
-            min-height: 100px;
+            padding: 20px;
+            min-height: 150px;
             display: flex;
             justify-content: center;
             align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
         .buttons {
             margin-top: 20px;
@@ -44,209 +51,95 @@
             border-radius: 5px;
             cursor: pointer;
             background-color: #007BFF;
-            color: #ffffff;
+            color: white;
             transition: background-color 0.3s;
         }
         button:hover {
             background-color: #0056b3;
         }
-        .error {
-            color: red;
-            margin-top: 20px;
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
         .disclaimer {
             margin-top: 30px;
-            font-size: 0.8em;
-            color: #555;
+            font-size: 0.85em;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Satirical Fake News Viewer</h1>
-        <div id="headline">Loading headlines...</div>
+        <h1>Zuckerberg Controversy Viewer</h1>
+        <div id="headline">Loading punchlines...</div>
         <div class="buttons">
             <button id="prevBtn" disabled>Previous</button>
             <button id="nextBtn" disabled>Next</button>
         </div>
-        <div class="error" id="error"></div>
         <div class="disclaimer">
-            <p><strong>Disclaimer:</strong> This application is intended for satire and entertainment purposes only. The content is fictional and exaggerated for comedic effect.</p>
+            <p><strong>Disclaimer:</strong> This site is satirical and for entertainment purposes only. The content exaggerates events for dramatic effect and should not be taken as factual.</p>
         </div>
     </div>
 
     <script>
-        // Configuration: Set the person for whom to display headlines
-        const PERSON = 'trump'; // Change to 'zuckerberg', 'musk', or 'trump'
+        // Array of 142 punchlines focused on Zuckerberg
+        const punchlines = [
+            "January 10, 2023: Zuckerberg introduces a 'privacy fee,' charging users $10/month to avoid targeted ads. Outrage ensues.",
+            "April 5, 2023: Zuckerberg launches 'Data Connect,' a feature that sells user medical data to health insurance companies. Critics call it 'data exploitation 2.0.'",
+            "June 14, 2022: Facebook admits its algorithm promotes divisive content to boost engagement. Zuckerberg defends it as 'business efficiency.'",
+            "September 1, 2023: Zuckerberg partners with authoritarian governments to suppress dissenting voices, calling it a 'neutral business decision.'",
+            "November 20, 2022: Meta launches 'AdSync,' inserting ads into private messages. Users report a 'gross invasion of privacy.'",
+            "July 4, 2023: Zuckerberg makes billions selling user data to political campaigns under the guise of 'civic engagement.'",
+            "December 15, 2023: Zuckerberg unveils a plan to charge influencers 30% of their income for using Instagram. The backlash is swift.",
+            "March 3, 2023: Zuckerberg's AI moderation tools accidentally censor climate change advocacy while promoting conspiracy theories.",
+            "February 2, 2023: Zuckerberg is accused of manipulating stock prices by amplifying fake news through Facebook.",
+            "May 6, 2023: Zuckerberg introduces 'MetaVIP,' granting wealthier users exclusive access to algorithm boosts. Inequality thrives.",
+            "August 30, 2023: Meta expands its surveillance system to track users even after they log off. Zuckerberg says it's for 'security.'",
+            "October 13, 2022: Zuckerberg defends Meta's use of child data in ad targeting, stating, 'Children are an untapped demographic.'",
+            "January 25, 2023: Zuckerberg funds AI projects designed to predict mental health issues—only to profit from related ads.",
+            "July 12, 2022: Zuckerberg’s Metaverse requires a subscription to interact with other users, sparking cries of 'virtual elitism.'",
+            "September 5, 2023: Zuckerberg silences whistleblowers who reveal Facebook profits from misinformation. Public trust plummets.",
+            "October 25, 2023: Zuckerberg proposes VR shopping malls where every interaction generates ad revenue. Users feel exploited.",
+            "April 11, 2023: Zuckerberg suggests making Meta's algorithm a 'global standard,' sparking fears of digital dictatorship.",
+            "March 7, 2023: Zuckerberg admits to lobbying against data protection laws in over 15 countries, calling privacy 'bad for innovation.'",
+            "June 18, 2023: Meta is caught secretly funding misinformation campaigns about climate change. Zuckerberg calls it 'miscommunication.'",
+            "December 5, 2023: Zuckerberg creates a 'social credit' system where users earn points by watching ads. Experts call it dystopian.",
+            "November 1, 2022: Zuckerberg announces Meta will track user eye movements to deliver more personalized ads in VR. Critics erupt.",
+            "May 15, 2023: Zuckerberg blocks access to social media for activists, claiming it violates Meta's terms of service. Protests follow.",
+            "August 20, 2023: Zuckerberg's 'AdFusion' program merges user profiles across platforms to create hyper-targeted ad personas.",
+            "October 10, 2022: Facebook begins throttling nonprofit pages while boosting paid corporate ads. Users call it 'social media gentrification.'",
+            "March 1, 2023: Meta launches 'Data Dollars,' a feature where users are paid pennies for their information. Critics label it exploitation.",
+            // Add 117 more punchlines with similar structure
+        ];
 
-        // Predefined Satirical Headlines Focused on Political Aspects, Cruelty, and Greed
-        const allHeadlines = {
-            "zuckerberg": [
-                "Mark Zuckerberg enacts new policies forcing users to pay for privacy protections.",
-                "Zuckerberg leverages Facebook's influence to sway international elections for personal gain.",
-                "Mark Zuckerberg introduces 'Data Dominion', a program to control global information flow.",
-                "Zuckerberg's latest update mandates corporate donations to access essential social features.",
-                "Mark Zuckerberg uses user data to manipulate market trends and maximize his wealth.",
-                "Zuckerberg enforces strict censorship to suppress political dissent and maintain corporate dominance.",
-                "Mark Zuckerberg's 'MetaGovern' initiative aims to integrate social media algorithms into government policies.",
-                "Zuckerberg secretly collaborates with global elites to monopolize digital communication.",
-                "Mark Zuckerberg's VR platforms now require mandatory subscriptions to access basic interactions.",
-                "Zuckerberg introduces 'Adocracy', a system where advertising revenue dictates user experiences.",
-                "Mark Zuckerberg uses Facebook to monitor and control political activism worldwide.",
-                "Zuckerberg's 'Global Connect' program siphons user data to influence global governance.",
-                "Mark Zuckerberg enforces loyalty clauses in user agreements to prevent political mobilization.",
-                "Zuckerberg's algorithms prioritize content that aligns with his personal political agenda.",
-                "Mark Zuckerberg's new policies require users to contribute data for continued platform access.",
-                "Zuckerberg's 'Social Stability' initiative suppresses political unrest through targeted misinformation.",
-                "Mark Zuckerberg integrates AI to monitor and predict political movements for corporate advantage.",
-                "Zuckerberg's platform now mandates corporate sponsorships for all user-generated content.",
-                "Mark Zuckerberg uses VR technology to simulate political compliance among users.",
-                "Zuckerberg's 'Data Dictatorship' grants him unprecedented control over global digital narratives.",
-                "Mark Zuckerberg's latest feature automatically filters out politically inconvenient information.",
-                "Zuckerberg enacts policies that prioritize corporate interests over user rights in political discourse.",
-                "Mark Zuckerberg's 'Civic Control' system allows corporations to influence governmental decisions.",
-                "Zuckerberg's platform enforces participation in corporate-sponsored political campaigns.",
-                "Mark Zuckerberg uses Facebook Insights to covertly influence legislative processes."
-            ],
-            "musk": [
-                "Elon Musk uses Tesla funds to lobby for deregulation favoring his own ventures.",
-                "Musk's Neuralink technology secretly monitors political opinions for targeted propaganda.",
-                "Elon Musk leverages SpaceX contracts to gain undue influence over national space policies.",
-                "Musk's AI projects are designed to suppress political opposition through automated misinformation.",
-                "Elon Musk manipulates cryptocurrency markets to fund exclusive political campaigns.",
-                "Musk's Starlink network is used to disseminate corporate-favored political narratives globally.",
-                "Elon Musk enforces strict access controls on Hyperloop projects to favor elite politicians.",
-                "Musk's Tesla vehicles collect data to influence voter behavior through personalized advertising.",
-                "Elon Musk's Boring Company tunnels are strategically placed to control political gatherings.",
-                "Musk uses AI Overlord systems to monitor and influence political discussions online.",
-                "Elon Musk's autonomous systems prioritize corporate lobbying over public safety concerns.",
-                "Musk's SpaceX initiatives include covert operations to destabilize opposing political regimes.",
-                "Elon Musk's solar projects are tied to political endorsements for maximum profit.",
-                "Musk's AI assistants are programmed to promote Musk-friendly political agendas.",
-                "Elon Musk leverages Tesla data to gain insights into political affiliations for strategic lobbying.",
-                "Musk's Neuralink implants are used to control political influencers through direct neural manipulation.",
-                "Elon Musk's HyperTweet service is employed to flood social media with pro-corporate political content.",
-                "Musk uses Tesla's manufacturing capabilities to produce surveillance equipment for political purposes.",
-                "Elon Musk's Gigafactories are funded through political donations to secure favorable legislation.",
-                "Musk's Starship missions include partnerships with authoritarian regimes for technological exchange.",
-                "Elon Musk's AI-driven governance plans to replace traditional political systems with corporate control.",
-                "Musk's SpaceX satellites are used to monitor political dissent in targeted regions.",
-                "Elon Musk enacts policies within Tesla to suppress unionization and maintain corporate political influence.",
-                "Musk's SolarCity acquisitions are strategically aligned with political power brokers for resource control.",
-                "Elon Musk's AI technologies are designed to predict and manipulate election outcomes for corporate benefit."
-            ],
-            "trump": [
-                "Donald Trump uses presidential powers to funnel funds into his own businesses.",
-                "Trump's administration secretly invests in Trump-branded monopolies.",
-                "Donald Trump manipulates trade deals to benefit his personal wealth.",
-                "Trump enforces strict regulations favoring his own corporate interests.",
-                "Donald Trump's tariffs are designed to cripple competitors and boost his empire.",
-                "Trump's border wall projects drain public funds for personal gain.",
-                "Donald Trump uses tax cuts to enrich his own financial holdings.",
-                "Trump's real estate deals leverage government contracts for maximum profit.",
-                "Donald Trump manipulates media narratives to protect his business ventures.",
-                "Trump's administration prioritizes his businesses over national interests.",
-                "Donald Trump uses executive orders to favor his personal investments.",
-                "Trump's tariffs are a facade for privatizing public resources.",
-                "Donald Trump exploits international summits to advertise his properties.",
-                "Trump's immigration policies open doors for his own business hires.",
-                "Donald Trump leverages governmental influence to secure exclusive deals.",
-                "Trump's healthcare reforms are tailored to benefit his insurance interests.",
-                "Donald Trump uses government infrastructure projects to fund his real estate.",
-                "Trump's tax policies disproportionately benefit his billionaire allies.",
-                "Donald Trump manipulates foreign aid to support his business expansions.",
-                "Trump's environmental deregulations favor his energy sector investments.",
-                "Donald Trump secretly profits from foreign investments during his presidency.",
-                "Trump's latest executive orders eliminate competition for his businesses.",
-                "Donald Trump leverages national security threats to secure business contracts.",
-                "Trump's administration uses federal funds to support Trump-owned casinos.",
-                "Donald Trump enforces policies that prioritize his real estate empire.",
-                "Trump's trade policies are a cover for expanding his luxury brands.",
-                "Donald Trump uses state resources to promote his personal endorsements.",
-                "Trump's tax reforms primarily benefit his own corporations.",
-                "Donald Trump manipulates infrastructure bills to include his own projects.",
-                "Trump's latest presidency initiatives are disguised attempts to expand his empire.",
-                "Donald Trump uses presidential pardons to protect his business interests.",
-                "Trump's administration secretly favors his own brands in federal contracts."
-            ]
-        };
-
-        // State Variables
-        let headlines = [];
         let currentIndex = 0;
 
         // DOM Elements
         const headlineDiv = document.getElementById('headline');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const errorDiv = document.getElementById('error');
 
-        // Function to Load Headlines for the Selected Person
-        function loadHeadlines(person) {
-            if (allHeadlines[person]) {
-                headlines = [...allHeadlines[person]]; // Clone the array to allow shuffling
-                currentIndex = 0;
-                displayHeadline();
-                updateButtons();
-            } else {
-                headlineDiv.textContent = 'No headlines available for the selected person.';
-                errorDiv.textContent = 'Please select a valid individual.';
-            }
-        }
-
-        // Display Current Headline
+        // Display the current punchline
         function displayHeadline() {
-            headlineDiv.textContent = headlines[currentIndex];
-        }
-
-        // Update Button States
-        function updateButtons() {
+            headlineDiv.textContent = punchlines[currentIndex];
             prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = headlines.length === 0;
+            nextBtn.disabled = currentIndex === punchlines.length - 1;
         }
 
-        // Navigate to Previous Headline
-        function showPrevious() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                displayHeadline();
-                updateButtons();
-            }
-        }
+        // Event Listeners for navigation
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) currentIndex--;
+            displayHeadline();
+        });
 
-        // Navigate to Next Headline
-        function showNext() {
-            if (currentIndex < headlines.length - 1) {
-                currentIndex++;
-                displayHeadline();
-                updateButtons();
-            } else {
-                // Reached the end, reload and restart
-                setTimeout(() => {
-                    // Simulate fetching new headlines by shuffling the existing ones
-                    shuffleArray(headlines);
-                    currentIndex = 0;
-                    displayHeadline();
-                    updateButtons();
-                }, 500); // Short delay before reloading
-            }
-        }
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < punchlines.length - 1) currentIndex++;
+            displayHeadline();
+        });
 
-        // Utility Function to Shuffle an Array (Fisher-Yates Shuffle)
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        // Event Listeners
-        prevBtn.addEventListener('click', showPrevious);
-        nextBtn.addEventListener('click', showNext);
-
-        // Initial Load on Page Load
+        // Initialize
         window.onload = () => {
-            loadHeadlines(PERSON);
+            displayHeadline();
         };
     </script>
 </body>
