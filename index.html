@@ -501,14 +501,32 @@
     
         // Copier le lien
         copyBtn.addEventListener('click', () => {
-            const link = `${window.location.origin}${window.location.pathname}#punchline=${seenPunchlines[currentIndex]}`;
-            navigator.clipboard.writeText(link).then(() => {
-                alert('Link copied to clipboard!');
+            let punchline = punchlines[currentIndex];
+            let linkText = "Read more"; // Texte par défaut pour le lien
+            let linkURL = `${window.location.origin}${window.location.pathname}#punchline=${seenPunchlines[currentIndex]}`; // URL par défaut
+        
+            // Vérifier s'il y a un lien dans la punchline (à la fin)
+            const linkRegex = /<a href='([^']+)'[^>]*>([^<]+)<\/a>$/;
+            const match = punchline.match(linkRegex);
+        
+            if (match) {
+                linkURL = match[1]; // Extraire l'URL
+                linkText = match[2]; // Extraire le texte du lien
+                punchline = punchline.replace(linkRegex, ''); // Retirer le lien de la punchline
+            }
+        
+            // Construire le message avec la punchline et le lien
+            const facebookMessage = `🌟 *📰 Zuckerberg True True News* 🌟\n\n🛑 *Read this true news* ⚡ :\n${punchline.replace(/<[^>]+>/g, '')}\n\n🔗 [${linkText}](${linkURL})\n\n🌍 🔍 *Let's fight together against misinformation !* 💪`;
+        
+            // Copier dans le presse-papiers
+            navigator.clipboard.writeText(facebookMessage).then(() => {
+                alert('Message copied to clipboard! You can now paste it into your Facebook feed.');
             }).catch(err => {
-                alert('Failed to copy the link.');
+                alert('Failed to copy the message.');
                 console.error('Error copying text: ', err);
             });
         });
+
 
         window.onload = () => {
             const initialIndex = getIndexFromURL();
