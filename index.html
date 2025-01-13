@@ -420,7 +420,10 @@
             "January 30, 2025: Zuckerberg's Meta is revealed to be developing unauthorized biometric data collection tools, infringing on personal privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
             "January 31, 2025: Zuckerberg's Meta is found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>"
         ];
-        let currentIndex = 0;
+        
+        let currentIndex = -1; // Curseur initial (-1 signifie avant toute punchline)
+        const seenPunchlines = []; // Tableau unique pour stocker les punchlines affichées
+
         function getIndexFromURL() {
             const hash = window.location.hash;
             if (hash.startsWith("#punchline=")) {
@@ -431,28 +434,54 @@
             }
             return 0;
         }
+        
         currentIndex = getIndexFromURL();
         const headlineDiv = document.getElementById('headline');
         const copyBtn = document.getElementById('copyBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        
+
         function displayPunchline() {
-            const currentPunchline = punchlines[currentIndex];
+            const currentPunchline = punchlines[seenPunchlines[currentIndex]];
             headlineDiv.innerHTML = currentPunchline;
-            window.location.hash = `punchline=${currentIndex}`;
-            prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex === punchlines.length - 1;
+        
+            // Mise à jour des boutons
+            prevBtn.disabled = currentIndex <= 0; // Désactiver si aucune punchline précédente
+            nextBtn.disabled = currentIndex >= seenPunchlines.length - 1 && seenPunchlines.length === punchlines.length;
+            // Désactiver "Next" si toutes les punchlines ont été vues
         }
         
+        function generateRandomIndex() {
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * punchlines.length);
+            } while (seenPunchlines.includes(randomIndex) && seenPunchlines.length < punchlines.length);
+            return randomIndex;
+        }
+        
+        // Gestion du bouton "Previous"
         prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) currentIndex--;
-            displayPunchline();
+            if (currentIndex > 0) {
+                currentIndex--; // Déplacer le curseur vers l'arrière
+                displayPunchline();
+            }
         });
         
+        // Gestion du bouton "Next"
         nextBtn.addEventListener('click', () => {
-            currentIndex = Math.floor(Math.random() * punchlines.length); // Génère un index aléatoire
+            if (currentIndex < seenPunchlines.length - 1) {
+                // Si on est dans l'historique, avancer
+                currentIndex++;
+            } else if (seenPunchlines.length < punchlines.length) {
+                // Découvrir une nouvelle punchline
+                const randomIndex = generateRandomIndex();
+                seenPunchlines.push(randomIndex);
+                currentIndex++;
+            }
             displayPunchline();
         });
+
 
         copyBtn.addEventListener('click', () => {
             const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
