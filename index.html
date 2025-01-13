@@ -218,6 +218,7 @@
                 if (response.authResponse) {
                     const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
                     const message = punchlines[currentIndex].replace(/<[^>]+>/g, '');
+
                     FB.api(
                         '/me/feed',
                         'POST',
@@ -495,8 +496,23 @@
         };
 
         copyBtn.addEventListener('click', () => {
-            const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
-            const facebookMessage = `📢 *Mark Zuckerberg True True News*\n\n${punchlines[currentIndex].replace(/<[^>]+>/g, '')}\n\n🔗 [Read more](${shareURL})`;
+            let punchline = punchlines[currentIndex];
+            let linkText = "Read more"; // Texte par défaut pour le lien
+            let linkURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`; // URL par défaut
+        
+            // Vérifier s'il y a un lien dans la punchline (à la fin)
+            const linkRegex = /<a href='([^']+)'[^>]*>([^<]+)<\/a>$/;
+            const match = punchline.match(linkRegex);
+        
+            if (match) {
+                linkURL = match[1]; // Extraire l'URL
+                linkText = match[2]; // Extraire le texte du lien
+                punchline = punchline.replace(linkRegex, ''); // Retirer le lien de la punchline
+            }
+        
+            // Construire le message Facebook avec le lien extrait
+            const facebookMessage = `🌟 *📰 Zuckerberg True True News* 🌟\n\n🛑 *Read this true news* ⚡ :\n${punchline.replace(/<[^>]+>/g, '')}\n\n🔗 [${linkText}](${linkURL})\n\n🌍 🔍 *Let's fight together against misinformation !* 💪`;
+        
             navigator.clipboard.writeText(facebookMessage).then(() => {
                 alert('Link copied to clipboard! You can now paste it into your Facebook feed.');
             }).catch(err => {
@@ -504,6 +520,7 @@
                 console.error('Error copying text: ', err);
             });
         });
+
         window.onload = () => {
             displayPunchline();
         };
