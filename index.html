@@ -422,7 +422,7 @@
         ];
         
         let currentIndex = -1; // Curseur initial (-1 signifie avant toute punchline)
-        const seenPunchlines = []; // Tableau unique pour stocker les punchlines affichées
+        const seenPunchlines = [0]; // Tableau unique pour stocker les punchlines affichées
 
         function getIndexFromURL() {
             const hash = window.location.hash;
@@ -443,8 +443,12 @@
         
 
         function displayPunchline() {
-            const currentPunchline = punchlines[seenPunchlines[currentIndex]];
-            headlineDiv.innerHTML = currentPunchline;
+            if (currentIndex >= 0 && currentIndex < seenPunchlines.length) {
+                const currentPunchline = punchlines[seenPunchlines[currentIndex]];
+                headlineDiv.innerHTML = currentPunchline;
+            } else {
+                headlineDiv.innerHTML = "No punchlines available.";
+            }
         
             // Mise à jour des boutons
             prevBtn.disabled = currentIndex <= 0; // Désactiver si aucune punchline précédente
@@ -481,6 +485,10 @@
             }
             displayPunchline();
         });
+        
+        // Initialisation : afficher la première punchline automatiquement
+        nextBtn.click();
+
 
 
         copyBtn.addEventListener('click', () => {
