@@ -448,18 +448,22 @@
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
 
+        // Fonction pour afficher une punchline
         function displayPunchline() {
-            if (currentIndex >= 0 && currentIndex < punchlines.length) {
-                headlineDiv.innerHTML = punchlines[currentIndex];
+            if (currentIndex >= 0 && currentIndex < seenPunchlines.length) {
+                const punchlineIndex = seenPunchlines[currentIndex];
+                headlineDiv.innerHTML = punchlines[punchlineIndex];
             } else {
                 headlineDiv.innerHTML = "No punchlines available.";
             }
         
-            // Mise à jour des boutons
-            prevBtn.disabled = currentIndex <= 0; // Désactiver si aucune punchline précédente
-            nextBtn.disabled = currentIndex >= punchlines.length - 1 && seenPunchlines.length === punchlines.length;
+            // Mettre à jour l'état des boutons
+            prevBtn.disabled = currentIndex <= 0; // Désactivé si vous êtes au début
+            nextBtn.disabled = 
+                currentIndex >= seenPunchlines.length - 1 && seenPunchlines.length === punchlines.length;
         }
         
+        // Fonction pour générer un index aléatoire non vu
         function generateRandomIndex() {
             let randomIndex;
             do {
@@ -469,34 +473,40 @@
         }
         
         // Gestion du bouton "Previous"
-        prevBtn.addEventListener('click', () => {
+        prevBtn.addEventListener("click", () => {
             if (currentIndex > 0) {
-                currentIndex--; // Déplacer le curseur vers l'arrière
+                currentIndex--; // Aller à la punchline précédente dans l'historique
                 displayPunchline();
             }
         });
         
         // Gestion du bouton "Next"
-        nextBtn.addEventListener('click', () => {
+        nextBtn.addEventListener("click", () => {
             if (currentIndex < seenPunchlines.length - 1) {
-                // Si on est dans l'historique, avancer
+                // Avancer dans l'historique existant
                 currentIndex++;
             } else if (seenPunchlines.length < punchlines.length) {
-                // Découvrir une nouvelle punchline
+                // Ajouter une nouvelle punchline si toutes n'ont pas encore été vues
                 const randomIndex = generateRandomIndex();
                 seenPunchlines.push(randomIndex);
-                currentIndex = seenPunchlines.length - 1; // Mettre à jour l'index courant
+                currentIndex++;
+            } else {
+                alert("You've seen all the punchlines!");
             }
             displayPunchline();
         });
         
-        // Initialiser l'affichage de la punchline courante
+        // Initialiser l'affichage
         window.onload = () => {
+            // Charger une punchline initiale si nécessaire
+            const initialIndex = generateRandomIndex();
+            seenPunchlines.push(initialIndex);
+            currentIndex++;
             displayPunchline();
         };
 
         copyBtn.addEventListener('click', () => {
-            let punchline = punchlines[currentIndex];
+            let punchline = punchlines[seenPunchlines[currentIndex]];
             let linkText = "Read more"; // Texte par défaut pour le lien
             let linkURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`; // URL par défaut
         
@@ -525,5 +535,6 @@
             displayPunchline();
         };
     </script>
+
 </body>
 </html>
