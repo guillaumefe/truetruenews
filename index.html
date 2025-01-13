@@ -443,14 +443,17 @@
             prevBtn.disabled = currentIndex === 0;
             nextBtn.disabled = currentIndex === punchlines.length - 1;
         }
+        
         prevBtn.addEventListener('click', () => {
             if (currentIndex > 0) currentIndex--;
             displayPunchline();
         });
+        
         nextBtn.addEventListener('click', () => {
-            if (currentIndex < punchlines.length - 1) currentIndex++;
+            currentIndex = Math.floor(Math.random() * punchlines.length); // Génère un index aléatoire
             displayPunchline();
         });
+
         copyBtn.addEventListener('click', () => {
             const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
             const facebookMessage = `📢 *Mark Zuckerberg True True News*\n\n${punchlines[currentIndex].replace(/<[^>]+>/g, '')}\n\n🔗 [Read more](${shareURL})`;
