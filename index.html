@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mark Zuckerberg True True News</title>
     <style>
-        /* Styles Mobile-First */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -120,7 +119,7 @@
             background-color: #4267B2;
             color: white;
             transition: background-color 0.3s;
-            display: none; /* Hidden until user logs in */
+            display: none;
         }
         #fbPostBtn:hover, #fbLogoutBtn:hover {
             background-color: #365899;
@@ -143,8 +142,6 @@
         .disclaimer a:hover {
             text-decoration: underline;
         }
-
-        /* Styles for Larger Screens */
         @media (min-width: 600px) {
             h1 {
                 font-size: 2em;
@@ -175,93 +172,75 @@
             }
         }
     </style>
-
-    <!-- Facebook SDK -->
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
     <script>
-        // Initialisation du SDK Facebook
         window.fbAsyncInit = function() {
             FB.init({
-                appId      : '1176302530687530', // <-- Remplacez par votre ID d'application Facebook
+                appId      : '9102744259792173',
                 cookie     : true,
                 xfbml      : true,
-                version    : 'v16.0' // Utilisez la dernière version disponible
+                version    : 'v16.0'
             });
-
             FB.AppEvents.logPageView();   
-
-            // Vérifier l'état de connexion après l'initialisation
             FB.getLoginStatus(function(response) {
                 handleLoginStatus(response);
             });
         };
-
-        // Fonction pour gérer l'état de connexion
         function handleLoginStatus(response) {
             if (response.status === 'connected' && localStorage.getItem('fb_logged_in') === 'true') {
-                // L'utilisateur est connecté et a une session valide
                 showLoggedInButtons();
             } else {
-                // L'utilisateur n'est pas connecté
                 showLoggedOutButtons();
             }
         }
-
-        // Fonction pour afficher les boutons lorsque l'utilisateur est connecté
         function showLoggedInButtons() {
             document.getElementById('fbLoginBtn').style.display = 'none';
             document.getElementById('fbPostBtn').style.display = 'inline-block';
             document.getElementById('fbLogoutBtn').style.display = 'inline-block';
         }
-
-        // Fonction pour afficher les boutons lorsque l'utilisateur est déconnecté
         function showLoggedOutButtons() {
             document.getElementById('fbLoginBtn').style.display = 'inline-block';
             document.getElementById('fbPostBtn').style.display = 'none';
             document.getElementById('fbLogoutBtn').style.display = 'none';
         }
-
-        // Fonction pour gérer la connexion Facebook
-        function fbLogin() {
+        function fbConnect() {
             FB.login(function(response) {
                 if (response.authResponse) {
-                    // Connexion réussie
                     localStorage.setItem('fb_logged_in', 'true');
                     showLoggedInButtons();
                 } else {
-                    // L'utilisateur a annulé la connexion ou une erreur est survenue
-                    alert('Connexion échouée ou annulée.');
+                    alert('Connection failed or canceled.');
                 }
-            }, {scope: 'public_profile,email,publish_to_groups,pages_manage_posts,publish_pages'});
+            }, {scope: 'public_profile,email'});
         }
-
-        // Fonction pour gérer la publication sur Facebook
-        function fbPost() {
-            const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
-            const message = punchlines[currentIndex].replace(/<[^>]+>/g, '');
-
-            FB.api(
-                '/me/feed',
-                'POST',
-                { message: `📢 Mark Zuckerberg True True News\n\n${message}\n\n🔗 [Lire la suite](${shareURL})` },
-                function(response) {
-                    if (!response || response.error) {
-                        alert('Une erreur est survenue lors de la publication sur Facebook.');
-                        console.error('Erreur API Facebook:', response.error);
-                    } else {
-                        alert('Publication réussie! Vérifiez votre fil d\'actualité Facebook.');
-                    }
+        function fbPublish() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
+                    const message = punchlines[currentIndex].replace(/<[^>]+>/g, '');
+                    FB.api(
+                        '/me/feed',
+                        'POST',
+                        { message: `📢 Mark Zuckerberg True True News\n\n${message}`, link: shareURL },
+                        function(response) {
+                            if (!response || response.error) {
+                                alert('An error occurred while publishing to Facebook.');
+                                console.error('Facebook API Error:', response.error);
+                            } else {
+                                alert('Publication successful! Check your Facebook news feed.');
+                            }
+                        }
+                    );
+                } else {
+                    alert('Failed to obtain necessary permissions for publishing.');
                 }
-            );
+            }, {scope: 'public_profile,email,publish_to_groups,manage_pages,publish_pages'});
         }
-
-        // Fonction pour gérer la déconnexion Facebook
         function fbLogout() {
             FB.logout(function(response) {
-                // Déconnexion réussie
                 localStorage.removeItem('fb_logged_in');
                 showLoggedOutButtons();
-                alert('Déconnecté de Facebook.');
+                alert('Disconnected from Facebook.');
             });
         }
     </script>
@@ -272,22 +251,21 @@
         <div id="videoContainer">
             <iframe src="https://www.instagram.com/reel/DEhf2uTJUs0/embed" allowfullscreen></iframe>
         </div>
-        <div id="headline">Chargement des punchlines...</div>
+        <div id="headline">Loading True True News...</div>
         <button id="copyBtn">Copy link</button>
         <div class="buttons">
             <button id="prevBtn" disabled>Previous</button>
             <button id="nextBtn" disabled>Next</button>
         </div>
         <div class="buttons">
-            <button id="fbLoginBtn" onclick="fbLogin()">Connect with Facebook</button>
-            <button id="fbPostBtn" onclick="fbPost()">Publish on Facebook</button>
+            <button id="fbLoginBtn" onclick="fbConnect()">Connect with Facebook</button>
+            <button id="fbPostBtn" onclick="fbPublish()">Publish on Facebook</button>
             <button id="fbLogoutBtn" onclick="fbLogout()">Disconnect</button>
         </div>
         <div class="disclaimer">
-            <p><strong>Disclaimer :</strong> This site is satirical and for entertainment purposes only. The content exaggerates events for dramatic effect and should not be taken as factual. This site is resolutely political and antifascist. We condemn all forms of oppression and manipulation of information by powerful entities. Together, we fight against the abuse of power and defend freedom and truth.</p>
+            <p><strong>Disclaimer:</strong> This site is satirical and for entertainment purposes only. The content exaggerates events for dramatic effect and should not be taken as factual. This site is resolutely political and antifascist. We condemn all forms of oppression and manipulation of information by powerful entities. Together, we fight against the abuse of power and defend freedom and truth.</p>
         </div>
     </div>
-
     <script>
         const punchlines = [
             "September 3, 2024: Zuckerberg orchestrates a massive data breach to manipulate election outcomes. Public outcry intensifies. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
@@ -442,10 +420,7 @@
             "January 30, 2025: Zuckerberg's Meta is revealed to be developing unauthorized biometric data collection tools, infringing on personal privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
             "January 31, 2025: Zuckerberg's Meta is found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>"
         ];
-
         let currentIndex = 0;
-
-        // Fonction pour obtenir l'index actuel à partir de l'URL si présent
         function getIndexFromURL() {
             const hash = window.location.hash;
             if (hash.startsWith("#punchline=")) {
@@ -456,52 +431,38 @@
             }
             return 0;
         }
-
         currentIndex = getIndexFromURL();
-
         const headlineDiv = document.getElementById('headline');
         const copyBtn = document.getElementById('copyBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-
-        // Fonction pour afficher la punchline actuelle
         function displayPunchline() {
             const currentPunchline = punchlines[currentIndex];
             headlineDiv.innerHTML = currentPunchline;
-
-            // Mettre à jour le fragment d'URL
             window.location.hash = `punchline=${currentIndex}`;
-
-            // Activer/Désactiver les boutons
             prevBtn.disabled = currentIndex === 0;
             nextBtn.disabled = currentIndex === punchlines.length - 1;
         }
-
         prevBtn.addEventListener('click', () => {
             if (currentIndex > 0) currentIndex--;
             displayPunchline();
         });
-
         nextBtn.addEventListener('click', () => {
             if (currentIndex < punchlines.length - 1) currentIndex++;
             displayPunchline();
         });
-
         copyBtn.addEventListener('click', () => {
             const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
-            const facebookMessage = `📢 *Mark Zuckerberg True True News*\n\n${punchlines[currentIndex].replace(/<[^>]+>/g, '')}\n\n🔗 [Lire la suite](${shareURL})`;
+            const facebookMessage = `📢 *Mark Zuckerberg True True News*\n\n${punchlines[currentIndex].replace(/<[^>]+>/g, '')}\n\n🔗 [Read more](${shareURL})`;
             navigator.clipboard.writeText(facebookMessage).then(() => {
-                alert('Lien copié dans le presse-papiers! Vous pouvez maintenant le coller dans votre fil Facebook.');
+                alert('Link copied to clipboard! You can now paste it into your Facebook feed.');
             }).catch(err => {
-                alert('Échec de la copie du lien.');
-                console.error('Erreur lors de la copie du texte: ', err);
+                alert('Failed to copy the link.');
+                console.error('Error copying text: ', err);
             });
         });
-
-        // Initialiser l'affichage
         window.onload = () => {
             displayPunchline();
-            // Vérifier l'état de connexion est déjà géré dans fbAsyncInit
         };
     </script>
 </body>
