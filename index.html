@@ -432,28 +432,31 @@
                     return index;
                 }
             }
-            return 0;
+            return 0; // Retourne la première punchline par défaut
         }
         
         currentIndex = getIndexFromURL();
+        
+        // Si l'index de l'URL n'est pas déjà dans les punchlines vues, on l'ajoute
+        if (!seenPunchlines.includes(currentIndex)) {
+            seenPunchlines.push(currentIndex);
+        }
+        
         const headlineDiv = document.getElementById('headline');
         const copyBtn = document.getElementById('copyBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        
 
         function displayPunchline() {
-            if (currentIndex >= 0 && currentIndex < seenPunchlines.length) {
-                const currentPunchline = punchlines[seenPunchlines[currentIndex]];
-                headlineDiv.innerHTML = currentPunchline;
+            if (currentIndex >= 0 && currentIndex < punchlines.length) {
+                headlineDiv.innerHTML = punchlines[currentIndex];
             } else {
                 headlineDiv.innerHTML = "No punchlines available.";
             }
         
             // Mise à jour des boutons
             prevBtn.disabled = currentIndex <= 0; // Désactiver si aucune punchline précédente
-            nextBtn.disabled = currentIndex >= seenPunchlines.length - 1 && seenPunchlines.length === punchlines.length;
-            // Désactiver "Next" si toutes les punchlines ont été vues
+            nextBtn.disabled = currentIndex >= punchlines.length - 1 && seenPunchlines.length === punchlines.length;
         }
         
         function generateRandomIndex() {
@@ -481,15 +484,15 @@
                 // Découvrir une nouvelle punchline
                 const randomIndex = generateRandomIndex();
                 seenPunchlines.push(randomIndex);
-                currentIndex++;
+                currentIndex = seenPunchlines.length - 1; // Mettre à jour l'index courant
             }
             displayPunchline();
         });
         
-        // Initialisation : afficher la première punchline automatiquement
-        nextBtn.click();
-
-
+        // Initialiser l'affichage de la punchline courante
+        window.onload = () => {
+            displayPunchline();
+        };
 
         copyBtn.addEventListener('click', () => {
             const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
