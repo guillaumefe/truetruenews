@@ -422,9 +422,15 @@
             "January 31, 2025: Zuckerberg's Meta is found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>"
         ];
         
-        let currentIndex = -1; // Curseur initial (-1 signifie avant toute punchline)
+        let currentIndex = 0; // Curseur initial 
         const seenPunchlines = []; // Tableau unique pour stocker les punchlines affichées
 
+        const headlineDiv = document.getElementById('headline');
+        const copyBtn = document.getElementById('copyBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        // Récupère l'index depuis le hash de l'URL
         function getIndexFromURL() {
             const hash = window.location.hash;
             if (hash.startsWith("#punchline=")) {
@@ -433,98 +439,71 @@
                     return index;
                 }
             }
-            return 0; // Retourne la première punchline par défaut
+            return 0; // Valeur par défaut
         }
-        
-        currentIndex = getIndexFromURL();
-        
-        // Si l'index de l'URL n'est pas déjà dans les punchlines vues, on l'ajoute
-        if (!seenPunchlines.includes(currentIndex)) {
-            seenPunchlines.push(currentIndex);
-        }
-        
-        const headlineDiv = document.getElementById('headline');
-        const copyBtn = document.getElementById('copyBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-
-        // Fonction pour afficher une punchline
+    
+        // Affiche la punchline actuelle
         function displayPunchline() {
-            if (currentIndex >= 0 && currentIndex < seenPunchlines.length) {
-                const punchlineIndex = seenPunchlines[currentIndex];
+            if (seenPunchlines.length === 0) {
+                headlineDiv.innerHTML = "No punchlines available.";
+                return;
+            }
+        
+            const punchlineIndex = seenPunchlines[currentIndex];
+            if (punchlines[punchlineIndex]) {
                 headlineDiv.innerHTML = punchlines[punchlineIndex];
+                // Met à jour le hash de l'URL
+                window.location.hash = `#punchline=${punchlineIndex}`;
             } else {
                 headlineDiv.innerHTML = "No punchlines available.";
             }
         
-            // Mettre à jour l'état des boutons
-            prevBtn.disabled = currentIndex <= 0; // Désactivé si vous êtes au début
-            nextBtn.disabled = 
-                currentIndex >= seenPunchlines.length - 1 && seenPunchlines.length === punchlines.length;
+            // Active ou désactive les boutons
+            prevBtn.disabled = currentIndex <= 0;
+            nextBtn.disabled = seenPunchlines.length >= punchlines.length;
         }
-        
-        // Fonction pour générer un index aléatoire non vu
+
+    
+        // Génère un index aléatoire qui n'a pas encore été vu
         function generateRandomIndex() {
+            if (seenPunchlines.length >= punchlines.length) return null; // Toutes vues
             let randomIndex;
             do {
                 randomIndex = Math.floor(Math.random() * punchlines.length);
-            } while (seenPunchlines.includes(randomIndex) && seenPunchlines.length < punchlines.length);
+            } while (seenPunchlines.includes(randomIndex));
             return randomIndex;
         }
-        
-        // Gestion du bouton "Previous"
+
+    
+        // Gestion des boutons
         prevBtn.addEventListener("click", () => {
             if (currentIndex > 0) {
-                currentIndex--; // Aller à la punchline précédente dans l'historique
+                currentIndex--;
                 displayPunchline();
             }
         });
-        
-        // Gestion du bouton "Next"
+    
         nextBtn.addEventListener("click", () => {
             if (currentIndex < seenPunchlines.length - 1) {
-                // Avancer dans l'historique existant
-                currentIndex++;
-            } else if (seenPunchlines.length < punchlines.length) {
-                // Ajouter une nouvelle punchline si toutes n'ont pas encore été vues
-                const randomIndex = generateRandomIndex();
-                seenPunchlines.push(randomIndex);
                 currentIndex++;
             } else {
-                alert("You've seen all the punchlines!");
+                const randomIndex = generateRandomIndex();
+                if (randomIndex !== null) {
+                    seenPunchlines.push(randomIndex);
+                    currentIndex++;
+                } else {
+                    alert("No more punchlines to display.");
+                }
             }
             displayPunchline();
         });
-        
-        // Initialiser l'affichage
-        window.onload = () => {
-            // Charger une punchline initiale si nécessaire
-            const initialIndex = generateRandomIndex();
-            seenPunchlines.push(initialIndex);
-            currentIndex++;
-            displayPunchline();
-        };
 
+    
+        // Copier le lien
         copyBtn.addEventListener('click', () => {
-            let punchline = punchlines[seenPunchlines[currentIndex]];
-            let linkText = "Read more"; // Texte par défaut pour le lien
-            let linkURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`; // URL par défaut
-        
-            // Vérifier s'il y a un lien dans la punchline (à la fin)
-            const linkRegex = /<a href='([^']+)'[^>]*>([^<]+)<\/a>$/;
-            const match = punchline.match(linkRegex);
-        
-            if (match) {
-                linkURL = match[1]; // Extraire l'URL
-                linkText = match[2]; // Extraire le texte du lien
-                punchline = punchline.replace(linkRegex, ''); // Retirer le lien de la punchline
-            }
-        
-            // Construire le message Facebook avec le lien extrait
-            const facebookMessage = `🌟 *📰 Zuckerberg True True News* 🌟\n\n🛑 *Read this true news* ⚡ :\n${punchline.replace(/<[^>]+>/g, '')}\n\n🔗 [${linkText}](${linkURL})\n\n🌍 🔍 *Let's fight together against misinformation !* 💪`;
-        
-            navigator.clipboard.writeText(facebookMessage).then(() => {
-                alert('Link copied to clipboard! You can now paste it into your Facebook feed.');
+            const link = `${window.location.origin}${window.location.pathname}#punchline=${seenPunchlines[currentIndex]}`;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link copied to clipboard!');
             }).catch(err => {
                 alert('Failed to copy the link.');
                 console.error('Error copying text: ', err);
@@ -532,8 +511,21 @@
         });
 
         window.onload = () => {
+            const initialIndex = getIndexFromURL();
+            
+            // Ajoute l'index initial si absent de seenPunchlines
+            if (!seenPunchlines.includes(initialIndex)) {
+                seenPunchlines.push(initialIndex);
+            }
+            
+            // Met à jour currentIndex pour pointer vers initialIndex dans seenPunchlines
+            currentIndex = seenPunchlines.indexOf(initialIndex);
+            
             displayPunchline();
         };
+
+
+
     </script>
 
 </body>
