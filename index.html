@@ -78,7 +78,7 @@
             border-radius: 8px;
         }
         #moustache {
-            width: 50px;
+            width: 20px;
             height: 10px;
             background-color: black;
             border-radius: 5px;
@@ -332,7 +332,7 @@
             "January 30, 2025: Revealed to be developing unauthorized biometric data collection tools, infringing on personal privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
             "January 31, 2025: Found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>"
         ];
-        
+
         let currentIndex = 0;
         const seenPunchlines = [];
         const headlineDiv = document.getElementById('headline');
@@ -413,7 +413,8 @@
                 punchline = punchline.replace(linkRegex, '');
             }
 
-            const viralMessage = `🔥🚨 *BREAKING SCANDAL* 🚨🔥\n\n` +
+            const viralMessage = 
+                `🔥🚨 *BREAKING SCANDAL* 🚨🔥\n\n` +
                 `*True True News*\n\n` +
                 `🚀 *Shocking Revelation:* ${punchline.replace(/<[^>]+>/g, '')}\n\n` +
                 `🔗 [${linkText}](${linkURL})\n\n` +
@@ -438,9 +439,9 @@
             }
         });
 
-        document.addEventListener('mousemove', () => {
-            if (moustache.style.display === 'block') {
-                positionMoustache();
+        document.addEventListener('click', (event) => {
+            if (!zuckIcon.contains(event.target) && !tooltip.contains(event.target)) {
+                tooltip.style.display = 'none';
             }
         });
 
@@ -448,14 +449,12 @@
             const videoFrame = tooltip.querySelector('iframe');
             if (videoFrame) {
                 const rect = videoFrame.getBoundingClientRect();
-                moustache.style.left = `${rect.left + rect.width / 8}px`;
-                moustache.style.top = `${rect.top - 55}px`;
-        
-                // Ajuster dynamiquement la largeur de la moustache en fonction de la largeur de la vidéo
-                moustache.style.width = `${20}px`; // Exemple : 1/4 de la largeur du cadre vidéo
+                const containerRect = zuckContainer.getBoundingClientRect();
+                moustache.style.left = `50.5%`;
+                moustache.style.top = `1%`;
+                moustache.style.width = `15px`;
             }
         }
-
 
         function showMoustache() {
             moustache.style.display = 'block';
@@ -478,13 +477,17 @@
             observer.observe(tooltip, { attributes: true, attributeFilter: ['style'] });
         }
 
-        document.addEventListener('click', (event) => {
-            if (!zuckIcon.contains(event.target) && !tooltip.contains(event.target)) {
-                tooltip.style.display = 'none';
+        document.addEventListener('mousemove', () => {
+            if (moustache.style.display === 'block') {
+                positionMoustache();
             }
         });
 
-        monitorTooltip();
+        window.addEventListener('resize', () => {
+            if (moustache.style.display === 'block') {
+                positionMoustache();
+            }
+        });
 
         window.onload = () => {
             const initialIndex = getIndexFromURL();
@@ -493,6 +496,7 @@
             }
             currentIndex = seenPunchlines.indexOf(initialIndex);
             displayPunchline();
+            monitorTooltip();
         };
     </script>
 </body>
