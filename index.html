@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Zuckerberg True True News</title>
+    <title>True True News</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,42 +21,70 @@
             max-width: 800px;
             width: 100%;
         }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #444;
-        }
-        #videoContainer {
-            margin-bottom: 20px;
-        }
-        #videoContainer iframe {
+        .headline-container {
             width: 100%;
-            height: 300px;
-            border: none;
-            border-radius: 8px;
+            margin-bottom: 20px;
         }
         #headline {
-            font-size: 1em;
-            margin: 20px 0;
-            padding: 15px;
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            font-size: 2em;
+            margin: 0 auto;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 10px;
             background-color: #fff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: left;
         }
         #headline a {
             color: #007BFF;
             text-decoration: none;
             margin-top: 10px;
-            font-size: 0.9em;
+            font-size: 1em;
         }
         #headline a:hover {
             text-decoration: underline;
+        }
+        #zuckContainer {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        #zuckIcon {
+            font-size: 100px;
+            cursor: pointer;
+            position: relative;
+        }
+        .tooltip {
+            position: absolute;
+            top: -220px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 10;
+            display: none;
+        }
+        .tooltip iframe {
+            width: 300px;
+            height: 200px;
+            border: none;
+            border-radius: 8px;
+        }
+        #moustache {
+            width: 50px;
+            height: 10px;
+            background-color: black;
+            border-radius: 5px;
+            position: absolute;
+            display: none;
+            z-index: 20;
         }
         .buttons {
             margin-top: 20px;
@@ -65,7 +93,7 @@
             flex-wrap: wrap;
         }
         button {
-            padding: 10px 15px;
+            padding: 12px 20px;
             font-size: 1em;
             margin: 5px;
             border: none;
@@ -84,8 +112,8 @@
         }
         #copyBtn {
             margin-top: 10px;
-            padding: 8px 12px;
-            font-size: 0.9em;
+            padding: 10px 16px;
+            font-size: 1em;
             background-color: #28a745;
             border: none;
             border-radius: 5px;
@@ -95,44 +123,15 @@
         #copyBtn:hover {
             background-color: #218838;
         }
-        #fbLoginBtn {
-            padding: 10px 15px;
-            font-size: 1em;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #3b5998;
-            color: white;
-            transition: background-color 0.3s;
-        }
-        #fbLoginBtn:hover {
-            background-color: #2d4373;
-        }
-        #fbPostBtn, #fbLogoutBtn {
-            padding: 10px 15px;
-            font-size: 1em;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #4267B2;
-            color: white;
-            transition: background-color 0.3s;
-            display: none;
-        }
-        #fbPostBtn:hover, #fbLogoutBtn:hover {
-            background-color: #365899;
-        }
         .disclaimer {
             margin-top: 30px;
             font-size: 1em;
             color: #333;
             padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid #333;
+            border-radius: 10px;
             background-color: #fff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .disclaimer a {
             color: #dc3545;
@@ -143,294 +142,207 @@
             text-decoration: underline;
         }
         @media (min-width: 600px) {
-            h1 {
-                font-size: 2em;
-            }
-            #videoContainer iframe {
-                height: 400px;
-            }
             #headline {
-                font-size: 1.25em;
-                min-height: 150px;
-                padding: 20px;
+                font-size: 2.5em;
             }
             .disclaimer {
                 font-size: 1.1em;
                 padding: 20px;
             }
-            button {
-                padding: 12px 20px;
-                font-size: 1em;
-            }
-            #copyBtn {
-                padding: 10px 16px;
-                font-size: 1em;
-            }
-            #fbLoginBtn, #fbPostBtn, #fbLogoutBtn {
-                padding: 12px 20px;
-                font-size: 1em;
+            .tooltip iframe {
+                width: 400px;
+                height: 300px;
             }
         }
     </style>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
-    <script>
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId      : '9102744259792173',
-                cookie     : true,
-                xfbml      : true,
-                version    : 'v16.0'
-            });
-            FB.AppEvents.logPageView();   
-            FB.getLoginStatus(function(response) {
-                handleLoginStatus(response);
-            });
-        };
-        function handleLoginStatus(response) {
-            if (response.status === 'connected' && localStorage.getItem('fb_logged_in') === 'true') {
-                showLoggedInButtons();
-            } else {
-                showLoggedOutButtons();
-            }
-        }
-        function showLoggedInButtons() {
-            document.getElementById('fbLoginBtn').style.display = 'none';
-            document.getElementById('fbPostBtn').style.display = 'inline-block';
-            document.getElementById('fbLogoutBtn').style.display = 'inline-block';
-        }
-        function showLoggedOutButtons() {
-            document.getElementById('fbLoginBtn').style.display = 'inline-block';
-            document.getElementById('fbPostBtn').style.display = 'none';
-            document.getElementById('fbLogoutBtn').style.display = 'none';
-        }
-        function fbConnect() {
-            FB.login(function(response) {
-                if (response.authResponse) {
-                    localStorage.setItem('fb_logged_in', 'true');
-                    showLoggedInButtons();
-                } else {
-                    alert('Connection failed or canceled.');
-                }
-            }, {scope: 'public_profile,email'});
-        }
-        function fbPublish() {
-            FB.login(function(response) {
-                if (response.authResponse) {
-                    const shareURL = `${window.location.origin}${window.location.pathname}#punchline=${currentIndex}`;
-                    const message = punchlines[currentIndex].replace(/<[^>]+>/g, '');
-
-                    FB.api(
-                        '/me/feed',
-                        'POST',
-                        { message: `📢 Mark Zuckerberg True True News\n\n${message}`, link: shareURL },
-                        function(response) {
-                            if (!response || response.error) {
-                                alert('An error occurred while publishing to Facebook.');
-                                console.error('Facebook API Error:', response.error);
-                            } else {
-                                alert('Publication successful! Check your Facebook news feed.');
-                            }
-                        }
-                    );
-                } else {
-                    alert('Failed to obtain necessary permissions for publishing.');
-                }
-            }, {scope: 'public_profile,email,publish_to_groups,manage_pages,publish_pages'});
-        }
-        function fbLogout() {
-            FB.logout(function(response) {
-                localStorage.removeItem('fb_logged_in');
-                showLoggedOutButtons();
-                alert('Disconnected from Facebook.');
-            });
-        }
-    </script>
 </head>
 <body>
     <div class="container">
-        <h1>Mark Zuckerberg True True News</h1>
-        <div id="videoContainer">
-            <iframe src="https://www.instagram.com/reel/DEhf2uTJUs0/embed" allowfullscreen></iframe>
+        <div class="headline-container">
+            <div id="headline">Loading True True News...</div>
         </div>
-        <div id="headline">Loading True True News...</div>
+        <div id="zuckContainer">
+            <div id="zuckIcon" title="Hover to see video">💩</div>
+            <div class="tooltip" id="tooltip">
+                <iframe src="https://www.instagram.com/reel/DEhf2uTJUs0/embed" allowfullscreen></iframe>
+            </div>
+            <div id="moustache"></div>
+        </div>
         <button id="copyBtn">Copy link</button>
         <div class="buttons">
             <button id="prevBtn" disabled>Previous</button>
             <button id="nextBtn" disabled>Next</button>
         </div>
-        <div class="buttons">
-            <button id="fbLoginBtn" onclick="fbConnect()">Connect with Facebook</button>
-            <button id="fbPostBtn" onclick="fbPublish()">Publish on Facebook</button>
-            <button id="fbLogoutBtn" onclick="fbLogout()">Disconnect</button>
-        </div>
         <div class="disclaimer">
             <p><strong>Disclaimer:</strong> This site is satirical and for entertainment purposes only. The content exaggerates events for dramatic effect and should not be taken as factual. This site is resolutely political and antifascist. We condemn all forms of oppression and manipulation of information by powerful entities. Together, we fight against the abuse of power and defend freedom and truth.</p>
         </div>
     </div>
+
     <script>
         const punchlines = [
-            "September 3, 2024: Zuckerberg orchestrates a massive data breach to manipulate election outcomes. Public outcry intensifies. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "September 4, 2024: Zuckerberg secretly collaborates with spyware firms to monitor political activists. Privacy advocates are furious. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "September 5, 2024: Zuckerberg implements unauthorized facial recognition systems within Meta, violating privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "September 6, 2024: Zuckerberg uses Meta data to secretly influence urban development projects, benefiting his real estate investments. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 7, 2024: Zuckerberg's Meta is accused of exploiting user data to influence global commodity markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 8, 2024: Zuckerberg uses Meta's data to secretly influence global tourism trends, benefiting his personal investments. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 9, 2024: Zuckerberg uses Meta's data to create biased environmental reports favoring industrial interests over ecological concerns. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 10, 2024: Zuckerberg's Meta initiates a covert project to monitor and influence user emotions through targeted content. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 11, 2024: Zuckerberg's Meta is accused of exploiting user data to influence energy sector policies, prioritizing profit over sustainability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 12, 2024: Zuckerberg's Meta uses deceptive practices to hide data breaches, delaying public notifications and protections. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 13, 2024: Zuckerberg's Meta is accused of exploiting user data to influence international diplomatic relations, causing geopolitical tensions. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 14, 2024: Zuckerberg's Meta is found to be exploiting user data to develop unauthorized military-grade AI tools. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 15, 2024: Zuckerberg's Meta uses user data to develop unauthorized psychological profiling tools, infringing on mental privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 16, 2024: Zuckerberg's Meta is accused of exploiting user data to influence global commodity markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 17, 2024: Zuckerberg manipulates Meta's user data to influence international trade agreements in his favor. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 18, 2024: Zuckerberg initiates mass surveillance through Meta's platforms, tracking users' every move. Civil liberties under threat. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Details here</a>",
-            "September 19, 2024: Zuckerberg's Meta is accused of exploiting user data to influence global sporting events for commercial gain. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 20, 2024: Zuckerberg uses Meta's data to secretly influence educational curricula in schools, promoting specific agendas. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 21, 2024: Zuckerberg leverages Meta's data to create biased AI models that discriminate against minority groups. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 22, 2024: Zuckerberg's Meta is accused of exploiting user data to develop biased law enforcement tools, undermining justice. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 23, 2024: Zuckerberg's Meta is implicated in a scheme to manipulate cryptocurrency markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "September 24, 2024: Zuckerberg uses Meta's data to develop biased marketing strategies that exploit vulnerable populations without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "September 25, 2024: Zuckerberg implements unauthorized access to user webcams for data collection, sparking global privacy scandals. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "September 26, 2024: Zuckerberg's Meta is accused of exploiting user data to influence global agricultural policies, benefiting large agribusinesses over small farmers. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 27, 2024: Zuckerberg uses Meta platforms to secretly influence public health policies by manipulating related data. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 28, 2024: Zuckerberg uses Meta's data to secretly influence agricultural policies, benefiting large agribusinesses over small farmers. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 29, 2024: Zuckerberg's Meta platforms are used to orchestrate large-scale cyberattacks against political adversaries. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "September 30, 2024: Zuckerberg's Meta platforms are used to orchestrate large-scale cyberattacks against political adversaries. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "October 1, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate public transportation policies, causing infrastructure issues. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 2, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate real-time bidding in online advertising, inflating costs. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 3, 2024: Zuckerberg's Meta is accused of enabling unauthorized access to user data for law enforcement without warrants. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 4, 2024: Zuckerberg manipulates Meta's algorithms to control cultural narratives, marginalizing minority voices for his agenda. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 5, 2024: Zuckerberg manipulates Meta's algorithms to control cultural narratives, marginalizing minority voices for his agenda. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 6, 2024: Zuckerberg's Meta is accused of exploiting user data to develop biased legal sentencing algorithms, undermining justice systems. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "October 7, 2024: Zuckerberg is implicated in manipulating Meta's content moderation to favor corporate sponsors over free speech. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 8, 2024: Zuckerberg's Meta is revealed to be funding extremist groups under the guise of free speech. Governments demand accountability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Details here</a>",
-            "October 9, 2024: Zuckerberg manipulates Meta's algorithms to prioritize content that undermines public health initiatives, causing misinformation spread. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 10, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate global energy policies, prioritizing profit over sustainability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 11, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate housing market trends for profit. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 12, 2024: Zuckerberg's Meta is implicated in a scandal involving the sale of user data to illicit organizations without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 13, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate global energy policies, prioritizing profit over sustainability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 14, 2024: Zuckerberg's Meta is found to be exploiting user data to develop unauthorized military-grade AI tools. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "October 15, 2024: Zuckerberg secretly collaborates with spyware firms to monitor political activists. Privacy advocates are furious. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "October 16, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate food industry trends, promoting unhealthy products. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 17, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate global energy policies, prioritizing profit over sustainability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 18, 2024: Zuckerberg manipulates Meta's algorithms to suppress scientific research that contradicts his business interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 19, 2024: Zuckerberg uses Meta's data to create detailed psychological profiles of users, selling them to third-party advertisers. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 20, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate public transportation policies, causing infrastructure issues. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 21, 2024: Zuckerberg's Meta is accused of exploiting user data to manipulate public transportation policies, causing infrastructure issues. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 22, 2024: Zuckerberg's Meta is found to be exploiting user data to create biased educational content, undermining academic integrity. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 23, 2024: Zuckerberg manipulates Meta's algorithms to control cultural narratives, marginalizing minority voices for his agenda. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 24, 2024: Zuckerberg's Meta is accused of enabling unauthorized access to user data for corporate espionage purposes. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 25, 2024: Zuckerberg funds under-the-table deals to silence whistleblowers exposing Meta's unethical data practices. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 26, 2024: Zuckerberg uses Meta's infrastructure to conduct unauthorized psychological experiments on users without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 27, 2024: Zuckerberg's Meta is accused of exploiting user data to develop biased criminal profiling tools, endangering civil liberties. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "October 28, 2024: Zuckerberg uses Meta's infrastructure to secretly monitor and influence political campaign strategies worldwide. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 29, 2024: Zuckerberg manipulates Meta's algorithms to prioritize content that aligns with his personal interests, sidelining unbiased information. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 30, 2024: Zuckerberg manipulates Meta's algorithms to prioritize content that benefits his personal wealth accumulation over user welfare. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "October 31, 2024: Zuckerberg's Meta is found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "November 1, 2024: Zuckerberg's Meta is implicated in unauthorized data selling to automotive industries for targeted advertising without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 2, 2024: Zuckerberg's Meta is implicated in unauthorized data selling to competing tech giants without disclosure, violating user trust. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 3, 2024: Zuckerberg's Meta systems are hacked, revealing widespread unauthorized data sales to third parties. Users demand justice. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 4, 2024: Zuckerberg manipulates Meta's platforms to suppress labor movements, aligning with corporate interests over worker rights. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 5, 2024: Zuckerberg uses Meta's platforms to covertly fund political campaigns, bypassing transparency laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 6, 2024: Zuckerberg's Meta is found to be exploiting user data to influence real estate markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 7, 2024: Zuckerberg manipulates Meta's platforms to suppress scientific research that contradicts his business interests, controlling information flow. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 8, 2024: Zuckerberg's Meta is implicated in unauthorized data selling to automotive industries for targeted advertising without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 9, 2024: Zuckerberg manipulates Meta's algorithms to prioritize content from his personal businesses, sidelining competitors. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 10, 2024: Zuckerberg's Meta is implicated in unauthorized data mining for developing targeted political propaganda without user knowledge. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 11, 2024: Zuckerberg's Meta is accused of selling user browsing histories to pharmaceutical companies without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 12, 2024: Zuckerberg's Meta is implicated in unauthorized data selling to education institutions, compromising student privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 13, 2024: Zuckerberg manipulates Meta's user data to influence international trade policies, benefiting his own investments. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 14, 2024: Zuckerberg's Meta faces backlash for censoring critical journalists, claiming national security threats. Freedom of the press compromised. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "November 15, 2024: Zuckerberg's Meta is accused of exploiting user data to develop biased criminal profiling tools, endangering civil liberties. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "November 16, 2024: Zuckerberg's Meta is accused of facilitating illegal surveillance of political dissidents in oppressive regimes. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 17, 2024: Zuckerberg's Meta is accused of exploiting user data to develop biased legal sentencing algorithms, undermining justice systems. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 18, 2024: Zuckerberg's Meta is accused of exploiting user data to influence global sporting events for commercial gain. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "November 19, 2024: Zuckerberg's Meta is implicated in a global scheme to manipulate search engine results for political gain. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 20, 2024: Zuckerberg manipulates Meta's platforms to suppress climate change initiatives, aligning with industrial interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 21, 2024: Zuckerberg's Meta is accused of exploiting user data to develop biased law enforcement tools, undermining justice. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "November 22, 2024: Zuckerberg's Meta is accused of exploiting user data to develop biased criminal profiling tools, endangering civil liberties. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "November 23, 2024: Zuckerberg's Meta is implicated in unauthorized data sharing with entertainment conglomerates, violating user privacy agreements. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 24, 2024: Zuckerberg's Meta is implicated in a scheme to manipulate cryptocurrency markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 25, 2024: Zuckerberg manipulates Meta's algorithms to favor content that benefits his personal business ventures over user interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 26, 2024: Zuckerberg's Meta is implicated in unauthorized data mining for developing biased consumer behavior tools without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 27, 2024: Zuckerberg manipulates Meta's platforms to suppress scientific research that threatens his business interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 28, 2024: Zuckerberg uses Meta's influence to suppress environmental regulations, prioritizing profits over the planet. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 29, 2024: Zuckerberg implements undisclosed data harvesting techniques within Meta's messaging apps, breaching user trust. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "November 30, 2024: Zuckerberg manipulates Meta's platforms to suppress climate change initiatives, aligning with industrial interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "December 1, 2024: Zuckerberg manipulates Meta's data to create biased public health statistics, undermining global health initiatives. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 2, 2024: Zuckerberg implements hidden data collection methods within Meta's news platforms, infringing on journalistic integrity. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 3, 2024: Zuckerberg's Meta is revealed to be conducting unauthorized emotional analysis on users to influence mental health services. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "December 4, 2024: Zuckerberg's Meta is found to be conducting unauthorized data integration with transportation systems, risking public safety. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 5, 2024: Zuckerberg manipulates Meta algorithms to silence opposition voices, ensuring his political allies thrive. Democratic integrity questioned. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "December 6, 2024: Zuckerberg's Meta is found to be conducting unauthorized data sharing agreements with pharmaceutical companies. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 7, 2024: Zuckerberg's Meta is found to be conducting unauthorized data exchanges with financial institutions, risking user security. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 8, 2024: Zuckerberg implements hidden fees within Meta services to covertly extract more user data without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 9, 2024: Zuckerberg implements hidden data sharing protocols within Meta's health platforms, violating medical privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 10, 2024: Zuckerberg implements hidden data mining techniques within Meta platforms, violating user trust and privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 11, 2024: Zuckerberg's Meta is found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 12, 2024: Zuckerberg manipulates Meta's content policies to suppress independent journalism, controlling information flow. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 13, 2024: Zuckerberg's Meta is found to be conducting unauthorized data exchanges with defense contractors, risking national security. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 14, 2024: Zuckerberg enforces Meta policies that disproportionately target and silence marginalized communities. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 15, 2024: Zuckerberg implements hidden surveillance features within Meta's communication tools, invading user privacy on a large scale. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 16, 2024: Zuckerberg's Meta is found to be conducting unauthorized data aggregation for predictive policing without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 17, 2024: Zuckerberg implements hidden data-sharing practices within Meta's platforms, allowing secret access to user information. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 18, 2024: Zuckerberg's Meta is found to be conducting unauthorized data aggregation for predictive policing without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 19, 2024: Zuckerberg's Meta is found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 20, 2024: Zuckerberg's Meta is found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 21, 2024: Zuckerberg manipulates Meta's user data to create biased financial forecasts, manipulating stock markets for personal gain. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 22, 2024: Zuckerberg's Meta is accused of exploiting user data to influence global commodity markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "December 23, 2024: Zuckerberg implements hidden data collection in Meta's health apps, violating medical privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
-            "December 24, 2024: Zuckerberg's Meta is found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 25, 2024: Zuckerberg's Meta is found to be conducting unauthorized data exchanges with financial institutions, risking user security. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 26, 2024: Zuckerberg's Meta is found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 27, 2024: Zuckerberg manipulates Meta's algorithms to prioritize content that undermines public health initiatives, causing misinformation spread. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "December 28, 2024: Zuckerberg's Meta systems are hacked, revealing plans to manipulate global news narratives for profit. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 29, 2024: Zuckerberg's Meta is found to be conducting unauthorized genetic data collection through user interactions, violating privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 30, 2024: Zuckerberg's Meta is found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "December 31, 2024: Zuckerberg's Meta is found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "January 1, 2025: Zuckerberg uses Meta's data to develop biased transportation planning tools, favoring certain regions over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 2, 2025: Zuckerberg implements hidden data sharing protocols within Meta's platforms, allowing undisclosed third-party access. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 3, 2025: Zuckerberg's Meta is revealed to be profiling users for predictive policing without consent, raising ethical concerns. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 4, 2025: Zuckerberg implements hidden surveillance features in Meta's VR platforms, invading user privacy in virtual spaces. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 5, 2025: Zuckerberg uses Meta's platforms to covertly support authoritarian leaders by manipulating public opinion data. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 6, 2025: Zuckerberg's Meta is revealed to be conducting unauthorized emotional analysis on users to influence mental health services. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 7, 2025: Zuckerberg's Meta is revealed to be conducting unauthorized data profiling to influence consumer behavior in retail sectors. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 8, 2025: Zuckerberg's Meta is revealed to be conducting unauthorized data profiling to influence consumer behavior in retail sectors. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 9, 2025: Zuckerberg's Meta is revealed to be developing unauthorized AI surveillance tools for authoritarian regimes. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 10, 2025: Zuckerberg uses Meta's data to develop biased legal tools that favor corporate interests over individual rights. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 11, 2025: Zuckerberg's Meta is revealed to be engaging in unauthorized facial recognition data collection, violating privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 12, 2025: Zuckerberg is caught selling user data to foreign governments without consent. International relations strained. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
-            "January 13, 2025: Zuckerberg uses Meta's data to develop biased legal tools that favor corporate interests over individual rights. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 14, 2025: Zuckerberg's Meta is revealed to be collaborating with cybercriminals to exploit user data for financial theft. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 15, 2025: Zuckerberg's Meta is revealed to be developing unauthorized biometric surveillance tools, infringing on personal privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 16, 2025: Zuckerberg uses Meta's data to develop biased recruitment tools that favor certain demographics over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 17, 2025: Zuckerberg's Meta is revealed to be developing unauthorized predictive policing tools, infringing on civil liberties. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 18, 2025: Zuckerberg implements unauthorized facial recognition systems within Meta, violating privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
-            "January 19, 2025: Zuckerberg uses Meta's data to develop biased recruitment tools that favor certain demographics over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 20, 2025: Zuckerberg's Meta is revealed to be conducting unauthorized data mining for developing biased public opinion tools without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 21, 2025: Zuckerberg's Meta is found to be collaborating with rival tech giants to monopolize user data and suppress competition. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 22, 2025: Zuckerberg's Meta is accused of exploiting user data to influence global commodity markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
-            "January 23, 2025: Zuckerberg uses Meta's user data to secretly influence cultural trends, controlling societal norms for profit. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 24, 2025: Zuckerberg uses Meta's data to develop biased marketing strategies that exploit vulnerable populations without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 25, 2025: Zuckerberg initiates a covert project to integrate Meta data with military intelligence, raising ethical alarms. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 26, 2025: Zuckerberg uses Meta's data to develop biased transportation planning tools, favoring certain regions over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 27, 2025: Zuckerberg's Meta is found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "January 28, 2025: Zuckerberg's Meta is revealed to be conducting unauthorized data profiling to influence consumer behavior in retail sectors. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 29, 2025: Zuckerberg's Meta is found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
-            "January 30, 2025: Zuckerberg's Meta is revealed to be developing unauthorized biometric data collection tools, infringing on personal privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
-            "January 31, 2025: Zuckerberg's Meta is found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>"
+            "September 3, 2024: Orchestrates a massive data breach to manipulate election outcomes. Public outcry intensifies. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "September 4, 2024: Secretly collaborates with spyware firms to monitor political activists. Privacy advocates are furious. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "September 5, 2024: Implements unauthorized facial recognition systems, violating privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "September 6, 2024: Uses data to secretly influence urban development projects, benefiting personal real estate investments. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 7, 2024: Accused of exploiting user data to influence global commodity markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 8, 2024: Uses data to secretly influence global tourism trends, benefiting personal investments. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 9, 2024: Creates biased environmental reports favoring industrial interests over ecological concerns. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 10, 2024: Initiates a covert project to monitor and influence user emotions through targeted content. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 11, 2024: Accused of exploiting user data to influence energy sector policies, prioritizing profit over sustainability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 12, 2024: Uses deceptive practices to hide data breaches, delaying public notifications and protections. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 13, 2024: Accused of exploiting user data to influence international diplomatic relations, causing geopolitical tensions. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 14, 2024: Found to be exploiting user data to develop unauthorized military-grade AI tools. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 15, 2024: Uses data to develop unauthorized psychological profiling tools, infringing on mental privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 16, 2024: Accused of exploiting user data to influence global commodity markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 17, 2024: Manipulates user data to influence international trade agreements in personal favor. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 18, 2024: Initiates mass surveillance through platforms, tracking users' every move. Civil liberties under threat. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Details here</a>",
+            "September 19, 2024: Accused of exploiting user data to influence global sporting events for commercial gain. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 20, 2024: Uses data to secretly influence educational curricula in schools, promoting specific agendas. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 21, 2024: Leverages data to create biased AI models that discriminate against minority groups. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 22, 2024: Accused of exploiting user data to develop biased law enforcement tools, undermining justice. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 23, 2024: Implicated in a scheme to manipulate cryptocurrency markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "September 24, 2024: Uses data to develop biased marketing strategies that exploit vulnerable populations without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "September 25, 2024: Implements unauthorized access to user webcams for data collection, sparking global privacy scandals. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "September 26, 2024: Accused of exploiting user data to influence global agricultural policies, benefiting large agribusinesses over small farmers. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 27, 2024: Uses platforms to secretly influence public health policies by manipulating related data. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 28, 2024: Uses data to secretly influence agricultural policies, benefiting large agribusinesses over small farmers. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 29, 2024: Platforms are used to orchestrate large-scale cyberattacks against political adversaries. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "September 30, 2024: Platforms are used to orchestrate large-scale cyberattacks against political adversaries. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "October 1, 2024: Accused of exploiting user data to manipulate public transportation policies, causing infrastructure issues. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 2, 2024: Accused of exploiting user data to manipulate real-time bidding in online advertising, inflating costs. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 3, 2024: Accused of enabling unauthorized access to user data for law enforcement without warrants. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 4, 2024: Manipulates algorithms to control cultural narratives, marginalizing minority voices for personal agenda. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 5, 2024: Manipulates algorithms to control cultural narratives, marginalizing minority voices for personal agenda. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 6, 2024: Accused of exploiting user data to develop biased legal sentencing algorithms, undermining justice systems. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "October 7, 2024: Implicated in manipulating content moderation to favor corporate sponsors over free speech. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 8, 2024: Revealed to be funding extremist groups under the guise of free speech. Governments demand accountability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Details here</a>",
+            "October 9, 2024: Manipulates algorithms to prioritize content that undermines public health initiatives, causing misinformation spread. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 10, 2024: Accused of exploiting user data to manipulate global energy policies, prioritizing profit over sustainability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 11, 2024: Accused of exploiting user data to manipulate housing market trends for profit. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 12, 2024: Implicated in a scandal involving the sale of user data to illicit organizations without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 13, 2024: Accused of exploiting user data to manipulate global energy policies, prioritizing profit over sustainability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 14, 2024: Found to be exploiting user data to develop unauthorized military-grade AI tools. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "October 15, 2024: Secretly collaborates with spyware firms to monitor political activists. Privacy advocates are furious. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "October 16, 2024: Accused of exploiting user data to manipulate food industry trends, promoting unhealthy products. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 17, 2024: Accused of exploiting user data to manipulate global energy policies, prioritizing profit over sustainability. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 18, 2024: Manipulates algorithms to suppress scientific research that contradicts personal business interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 19, 2024: Uses data to create detailed psychological profiles of users, selling them to third-party advertisers. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 20, 2024: Accused of exploiting user data to manipulate public transportation policies, causing infrastructure issues. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 21, 2024: Accused of exploiting user data to manipulate public transportation policies, causing infrastructure issues. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 22, 2024: Found to be exploiting user data to create biased educational content, undermining academic integrity. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 23, 2024: Manipulates algorithms to control cultural narratives, marginalizing minority voices for personal agenda. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 24, 2024: Accused of enabling unauthorized access to user data for corporate espionage purposes. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 25, 2024: Funds under-the-table deals to silence whistleblowers exposing unethical data practices. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 26, 2024: Uses infrastructure to conduct unauthorized psychological experiments on users without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 27, 2024: Accused of exploiting user data to develop biased criminal profiling tools, endangering civil liberties. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "October 28, 2024: Uses infrastructure to secretly monitor and influence political campaign strategies worldwide. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 29, 2024: Manipulates algorithms to prioritize content that aligns with personal interests, sidelining unbiased information. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 30, 2024: Manipulates algorithms to prioritize content that benefits personal wealth accumulation over user welfare. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "October 31, 2024: Found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "November 1, 2024: Implicated in unauthorized data selling to automotive industries for targeted advertising without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 2, 2024: Implicated in unauthorized data selling to competing tech giants without disclosure, violating user trust. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 3, 2024: Systems are hacked, revealing widespread unauthorized data sales to third parties. Users demand justice. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 4, 2024: Manipulates platforms to suppress labor movements, aligning with corporate interests over worker rights. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 5, 2024: Uses platforms to covertly fund political campaigns, bypassing transparency laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 6, 2024: Found to be exploiting user data to influence real estate markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 7, 2024: Manipulates platforms to suppress scientific research that contradicts personal business interests, controlling information flow. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 8, 2024: Implicated in unauthorized data selling to automotive industries for targeted advertising without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 9, 2024: Manipulates algorithms to prioritize content from personal businesses, sidelining competitors. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 10, 2024: Implicated in unauthorized data mining for developing targeted political propaganda without user knowledge. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 11, 2024: Accused of selling user browsing histories to pharmaceutical companies without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 12, 2024: Implicated in unauthorized data selling to education institutions, compromising student privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 13, 2024: Manipulates user data to influence international trade policies, benefiting personal investments. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 14, 2024: Faces backlash for censoring critical journalists, claiming national security threats. Freedom of the press compromised. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "November 15, 2024: Accused of exploiting user data to develop biased criminal profiling tools, endangering civil liberties. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "November 16, 2024: Accused of facilitating illegal surveillance of political dissidents in oppressive regimes. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 17, 2024: Accused of exploiting user data to develop biased legal sentencing algorithms, undermining justice systems. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 18, 2024: Accused of exploiting user data to influence global sporting events for commercial gain. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "November 19, 2024: Implicated in a global scheme to manipulate search engine results for political gain. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 20, 2024: Manipulates platforms to suppress climate change initiatives, aligning with industrial interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 21, 2024: Accused of exploiting user data to develop biased law enforcement tools, undermining justice. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "November 22, 2024: Accused of exploiting user data to develop biased criminal profiling tools, endangering civil liberties. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "November 23, 2024: Implicated in unauthorized data sharing with entertainment conglomerates, violating user privacy agreements. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 24, 2024: Implicated in a scheme to manipulate cryptocurrency markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 25, 2024: Manipulates algorithms to favor content that benefits personal business ventures over user interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 26, 2024: Implicated in unauthorized data mining for developing biased consumer behavior tools without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 27, 2024: Manipulates platforms to suppress scientific research that threatens personal business interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 28, 2024: Uses influence to suppress environmental regulations, prioritizing profits over the planet. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 29, 2024: Implements undisclosed data harvesting techniques within messaging apps, breaching user trust. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "November 30, 2024: Manipulates platforms to suppress climate change initiatives, aligning with industrial interests. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "December 1, 2024: Manipulates data to create biased public health statistics, undermining global health initiatives. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 2, 2024: Implements hidden data collection methods within news platforms, infringing on journalistic integrity. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 3, 2024: Revealed to be conducting unauthorized emotional analysis on users to influence mental health services. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "December 4, 2024: Found to be conducting unauthorized data integration with transportation systems, risking public safety. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 5, 2024: Manipulates algorithms to silence opposition voices, ensuring political allies thrive. Democratic integrity questioned. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "December 6, 2024: Found to be conducting unauthorized data sharing agreements with pharmaceutical companies. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 7, 2024: Found to be conducting unauthorized data exchanges with financial institutions, risking user security. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 8, 2024: Implements hidden fees within services to covertly extract more user data without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 9, 2024: Implements hidden data sharing protocols within health platforms, violating medical privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 10, 2024: Implements hidden data mining techniques within platforms, violating user trust and privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 11, 2024: Found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 12, 2024: Manipulates content policies to suppress independent journalism, controlling information flow. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 13, 2024: Found to be conducting unauthorized data exchanges with defense contractors, risking national security. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 14, 2024: Enforces policies that disproportionately target and silence marginalized communities. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 15, 2024: Implements hidden surveillance features within communication tools, invading user privacy on a large scale. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 16, 2024: Found to be conducting unauthorized data aggregation for predictive policing without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 17, 2024: Implements hidden data-sharing practices within platforms, allowing secret access to user information. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 18, 2024: Found to be conducting unauthorized data aggregation for predictive policing without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 19, 2024: Found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 20, 2024: Found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 21, 2024: Manipulates user data to create biased financial forecasts, manipulating stock markets for personal gain. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 22, 2024: Accused of exploiting user data to influence global commodity markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "December 23, 2024: Implements hidden data collection in health apps, violating medical privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read details</a>",
+            "December 24, 2024: Found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 25, 2024: Found to be conducting unauthorized data exchanges with financial institutions, risking user security. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 26, 2024: Found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 27, 2024: Manipulates algorithms to prioritize content that undermines public health initiatives, causing misinformation spread. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "December 28, 2024: Systems are hacked, revealing plans to manipulate global news narratives for profit. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 29, 2024: Found to be conducting unauthorized genetic data collection through user interactions, violating privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 30, 2024: Found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "December 31, 2024: Found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "January 1, 2025: Uses data to develop biased transportation planning tools, favoring certain regions over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 2, 2025: Implements hidden data sharing protocols within platforms, allowing undisclosed third-party access. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 3, 2025: Revealed to be profiling users for predictive policing without consent, raising ethical concerns. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 4, 2025: Implements hidden surveillance features in VR platforms, invading user privacy in virtual spaces. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 5, 2025: Uses platforms to covertly support authoritarian leaders by manipulating public opinion data. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 6, 2025: Revealed to be conducting unauthorized emotional analysis on users to influence mental health services. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 7, 2025: Revealed to be conducting unauthorized data profiling to influence consumer behavior in retail sectors. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 8, 2025: Revealed to be conducting unauthorized data profiling to influence consumer behavior in retail sectors. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 9, 2025: Revealed to be developing unauthorized AI surveillance tools for authoritarian regimes. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 10, 2025: Uses data to develop biased legal tools that favor corporate interests over individual rights. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 11, 2025: Revealed to be engaging in unauthorized facial recognition data collection, violating privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 12, 2025: Caught selling user data to foreign governments without consent. International relations strained. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>More info</a>",
+            "January 13, 2025: Uses data to develop biased legal tools that favor corporate interests over individual rights. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 14, 2025: Revealed to be collaborating with cybercriminals to exploit user data for financial theft. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 15, 2025: Revealed to be developing unauthorized biometric surveillance tools, infringing on personal privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 16, 2025: Uses data to develop biased recruitment tools that favor certain demographics over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 17, 2025: Revealed to be developing unauthorized predictive policing tools, infringing on civil liberties. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 18, 2025: Implements unauthorized facial recognition systems within platforms, violating privacy laws. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Learn more</a>",
+            "January 19, 2025: Uses data to develop biased recruitment tools that favor certain demographics over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 20, 2025: Revealed to be conducting unauthorized data mining for developing biased public opinion tools without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 21, 2025: Found to be collaborating with rival tech giants to monopolize user data and suppress competition. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 22, 2025: Accused of exploiting user data to influence global commodity markets through targeted misinformation. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>See report</a>",
+            "January 23, 2025: Uses user data to secretly influence cultural trends, controlling societal norms for profit. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 24, 2025: Uses data to develop biased marketing strategies that exploit vulnerable populations without consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 25, 2025: Initiates a covert project to integrate data with military intelligence, raising ethical alarms. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 26, 2025: Uses data to develop biased transportation planning tools, favoring certain regions over others without transparency. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 27, 2025: Found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "January 28, 2025: Revealed to be conducting unauthorized data profiling to influence consumer behavior in retail sectors. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 29, 2025: Found to be conducting unauthorized data profiling for biased insurance underwriting without user consent. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>",
+            "January 30, 2025: Revealed to be developing unauthorized biometric data collection tools, infringing on personal privacy. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Find out more</a>",
+            "January 31, 2025: Found guilty of violating multiple international privacy laws through covert data collection. <a href='https://en.wikipedia.org/wiki/Criticism_of_Facebook' target='_blank'>Read more</a>"
         ];
         
-        let currentIndex = 0; // Curseur initial 
-        const seenPunchlines = []; // Tableau unique pour stocker les punchlines affichées
-
+        let currentIndex = 0;
+        const seenPunchlines = [];
         const headlineDiv = document.getElementById('headline');
         const copyBtn = document.getElementById('copyBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        
-        // Récupère l'index depuis le hash de l'URL
+        const zuckIcon = document.getElementById('zuckIcon');
+        const tooltip = document.getElementById('tooltip');
+        const moustache = document.getElementById('moustache');
+
         function getIndexFromURL() {
             const hash = window.location.hash;
             if (hash.startsWith("#punchline=")) {
@@ -439,34 +351,27 @@
                     return index;
                 }
             }
-            return 0; // Valeur par défaut
+            return 0;
         }
-    
-        // Affiche la punchline actuelle
+
         function displayPunchline() {
             if (seenPunchlines.length === 0) {
                 headlineDiv.innerHTML = "No punchlines available.";
                 return;
             }
-        
             const punchlineIndex = seenPunchlines[currentIndex];
             if (punchlines[punchlineIndex]) {
                 headlineDiv.innerHTML = punchlines[punchlineIndex];
-                // Met à jour le hash de l'URL
                 window.location.hash = `#punchline=${punchlineIndex}`;
             } else {
                 headlineDiv.innerHTML = "No punchlines available.";
             }
-        
-            // Active ou désactive les boutons
             prevBtn.disabled = currentIndex <= 0;
             nextBtn.disabled = seenPunchlines.length >= punchlines.length;
         }
 
-    
-        // Génère un index aléatoire qui n'a pas encore été vu
         function generateRandomIndex() {
-            if (seenPunchlines.length >= punchlines.length) return null; // Toutes vues
+            if (seenPunchlines.length >= punchlines.length) return null;
             let randomIndex;
             do {
                 randomIndex = Math.floor(Math.random() * punchlines.length);
@@ -474,15 +379,13 @@
             return randomIndex;
         }
 
-    
-        // Gestion des boutons
         prevBtn.addEventListener("click", () => {
             if (currentIndex > 0) {
                 currentIndex--;
                 displayPunchline();
             }
         });
-    
+
         nextBtn.addEventListener("click", () => {
             if (currentIndex < seenPunchlines.length - 1) {
                 currentIndex++;
@@ -498,53 +401,99 @@
             displayPunchline();
         });
 
-    
-        // Copier le lien
         copyBtn.addEventListener('click', () => {
             let punchline = punchlines[currentIndex];
-            let linkText = "Read more"; // Texte par défaut pour le lien
-            let linkURL = `${window.location.origin}${window.location.pathname}#punchline=${seenPunchlines[currentIndex]}`; // URL par défaut
-        
-            // Vérifier s'il y a un lien dans la punchline (à la fin)
+            let linkText = "Learn more";
+            let linkURL = `${window.location.origin}${window.location.pathname}#punchline=${seenPunchlines[currentIndex]}`;
             const linkRegex = /<a href='([^']+)'[^>]*>([^<]+)<\/a>$/;
             const match = punchline.match(linkRegex);
-        
             if (match) {
-                linkURL = match[1]; // Extraire l'URL
-                linkText = match[2]; // Extraire le texte du lien
-                punchline = punchline.replace(linkRegex, ''); // Retirer le lien de la punchline
+                linkURL = match[1];
+                linkText = match[2];
+                punchline = punchline.replace(linkRegex, '');
             }
-        
-            // Construire le message avec la punchline et le lien
-            const facebookMessage = `🌟 *📰 Zuckerberg True True News* 🌟\n\n🛑 *Read this true news* ⚡ :\n${punchline.replace(/<[^>]+>/g, '')}\n\n🔗 [${linkText}](${linkURL})\n\n🌍 🔍 *Let's fight together against misinformation !* 💪`;
-        
-            // Copier dans le presse-papiers
-            navigator.clipboard.writeText(facebookMessage).then(() => {
-                alert('Message copied to clipboard! You can now paste it into your Facebook feed.');
+
+            const viralMessage = `🔥🚨 *BREAKING SCANDAL* 🚨🔥\n\n` +
+                `*True True News*\n\n` +
+                `🚀 *Shocking Revelation:* ${punchline.replace(/<[^>]+>/g, '')}\n\n` +
+                `🔗 [${linkText}](${linkURL})\n\n` +
+                `✅ *Spread this far and wide!* Copy, paste, and share with everyone you know. Let's amplify the truth! #ViralNews #StopMisinformation #TrueTrueNews\n` +
+                `🔥 *Together, we fight against the abuse of power and defend freedom AND truth!* 🔥`;
+
+            navigator.clipboard.writeText(viralMessage).then(() => {
+                alert('Viral message copied! Share it everywhere now!');
             }).catch(err => {
                 alert('Failed to copy the message.');
                 console.error('Error copying text: ', err);
             });
         });
 
+        zuckIcon.addEventListener('mouseenter', () => {
+            tooltip.style.display = 'block';
+        });
+
+        zuckIcon.addEventListener('mouseleave', (event) => {
+            if (!tooltip.contains(event.relatedTarget)) {
+                tooltip.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('mousemove', () => {
+            if (moustache.style.display === 'block') {
+                positionMoustache();
+            }
+        });
+
+        function positionMoustache() {
+            const videoFrame = tooltip.querySelector('iframe');
+            if (videoFrame) {
+                const rect = videoFrame.getBoundingClientRect();
+                moustache.style.left = `${rect.left + rect.width / 8}px`;
+                moustache.style.top = `${rect.top - 55}px`;
+        
+                // Ajuster dynamiquement la largeur de la moustache en fonction de la largeur de la vidéo
+                moustache.style.width = `${20}px`; // Exemple : 1/4 de la largeur du cadre vidéo
+            }
+        }
+
+
+        function showMoustache() {
+            moustache.style.display = 'block';
+            positionMoustache();
+        }
+
+        function hideMoustache() {
+            moustache.style.display = 'none';
+        }
+
+        function monitorTooltip() {
+            const observer = new MutationObserver(() => {
+                const isVisible = tooltip.style.display === 'block';
+                if (isVisible) {
+                    showMoustache();
+                } else {
+                    hideMoustache();
+                }
+            });
+            observer.observe(tooltip, { attributes: true, attributeFilter: ['style'] });
+        }
+
+        document.addEventListener('click', (event) => {
+            if (!zuckIcon.contains(event.target) && !tooltip.contains(event.target)) {
+                tooltip.style.display = 'none';
+            }
+        });
+
+        monitorTooltip();
 
         window.onload = () => {
             const initialIndex = getIndexFromURL();
-            
-            // Ajoute l'index initial si absent de seenPunchlines
             if (!seenPunchlines.includes(initialIndex)) {
                 seenPunchlines.push(initialIndex);
             }
-            
-            // Met à jour currentIndex pour pointer vers initialIndex dans seenPunchlines
             currentIndex = seenPunchlines.indexOf(initialIndex);
-            
             displayPunchline();
         };
-
-
-
     </script>
-
 </body>
 </html>
